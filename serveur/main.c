@@ -8,7 +8,7 @@ void afficher_terrain(t_joueur* joueur) {
 	int i, j;
 	for(i=0; i<TAILLE; i++) {
 		for(j=0; j<TAILLE; j++) {
-			printf("%c", joueur->plateau->cases[i][j]);
+			printf("%c", joueur->plateau[j][i]);
 		}
 		printf("\n");
 	}
@@ -19,19 +19,30 @@ int main(void) {
 
 	t_joueur* joueur = create_empty_player();
 
-	t_case c[4];
-	c[0].x = 5;
-	c[0].y = 2;
-	c[1].x = 5;
-	c[1].y = 3;
-	c[2].x = 5;
-	c[2].y = 4;
-	c[3].x = 5;
-	c[3].y = 5;
+	t_point points[3];
+	points[0].x = 1;
+	points[0].y = 1;
+	points[1].x = 1;
+	points[1].y = 1;
 
-	t_bateau* bateau = create_boat(c, 4);
+	add_boat(joueur, points, 2);
 
-	add_boat(joueur, bateau);
+	move_sonde(joueur, 'U');
+	move_sonde(joueur, 'D');
+	move_sonde(joueur, 'D');
+	move_sonde(joueur, 'R');
+
+	attack(joueur, joueur);
+
+	move_sonde(joueur, 'R');
+
+	attack(joueur, joueur);
+
+	move_sonde(joueur, 'U');
+	move_sonde(joueur, 'U');
+	move_sonde(joueur, 'U');
+	
+	attack(joueur, joueur);
 
 	afficher_terrain(joueur);
 
