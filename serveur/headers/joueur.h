@@ -1,4 +1,5 @@
 #include "sonde.h"
+#include "network.h"
 #include "point.h"
 
 #define NB_BATEAUX 7
@@ -9,12 +10,15 @@ typedef struct st_joueur {
 	char* nom;
 	char plateau[TAILLE][TAILLE];
 	t_sonde* sonde;
-	int nb_bateaux; // On conserve le nombre de "cases bateaux" pour connaître le nombre de coups restants.
+	int nb_bateaux; // On conserve le nombre de "cases bateaux" pour connaître le nombre de coups restants à chaque début de tour.
 	int coups_restants;
+	t_socket sock;
 } t_joueur;
 
 //Initialise un joueur vide.
 t_joueur* create_empty_player();
+// Crée un joueur à partir d'une socket.
+t_joueur* create_player(t_socket sock);
 // Setter pour une case du plateau d'un joueur.
 void set_value(t_joueur* joueur, int x, int y, char value);
 // Ajoute un bateau à un joueur.
@@ -31,3 +35,5 @@ int move_sonde(t_joueur* joueur, char direction);
 int valid_move(t_joueur* joueur, char direction);
 // Lance le tour d'un joueur.
 void turn(t_joueur* joueur, t_joueur* joueurs, int nb_joueurs);
+// affiche le terrain d'un joueur.
+void afficher_terrain(t_joueur* joueur);

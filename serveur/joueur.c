@@ -20,6 +20,12 @@ t_joueur* create_empty_player() {
 	return joueur;
 }
 
+t_joueur* create_player(t_socket sock) {
+	t_joueur* joueur = create_empty_player();
+	joueur->sock = sock;
+	return joueur;
+}
+
 void start_turn(t_joueur* joueur) {
 	joueur->coups_restants = MAX_ACTIONS - joueur->nb_bateaux;
 	joueur->sonde->a_tire = false;
@@ -91,25 +97,12 @@ int valid_move(t_joueur* joueur, char direction) {
 	return false;
 }
 
-void turn(t_joueur* joueur, t_joueur* joueurs, int nb_joueurs) {
-	start_turn(joueur);
-	char tmp;
-	while(joueur->coups_restants > 0 && joueur->sonde->a_tire == false) {
-		printf("Entrez votre commande : ");
-		scanf("%c\n", &tmp);
-		if(tmp == 'F') {
-			int i;
-			for(i = 0; i < nb_joueurs; i++) {
-				if(attack(joueur, &joueurs[nb_joueurs])) {
-					printf("attaque non réglementaire");
-				}
-			}
+void afficher_terrain(t_joueur* joueur) {
+	int i, j;
+	for(i=0; i<TAILLE; i++) {
+		for(j=0; j<TAILLE; j++) {
+			printf("%c", joueur->plateau[j][i]);
 		}
-		else if( tmp == 'U' || tmp == 'D' || tmp == 'L' || tmp == 'R') {
-			if(!move_sonde(joueur, tmp)) {
-				printf("Déplacement non autorisé.");
-			}
-		}
+		printf("\n");
 	}
-	printf("fin du tour");
 }

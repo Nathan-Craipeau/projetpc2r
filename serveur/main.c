@@ -1,76 +1,42 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <netdb.h>
+#include <errno.h>
 
 #include "headers/joueur.h"
-#include "headers/network.h"
 #include "headers/commande.h"
 
 #define true 1
 #define false 0
 
-void afficher_terrain(t_joueur* joueur) {
-	int i, j;
-	for(i=0; i<TAILLE; i++) {
-		for(j=0; j<TAILLE; j++) {
-			printf("%c", joueur->plateau[j][i]);
-		}
-		printf("\n");
-	}
-}
+#define MAX_PLAYERS 4
 
 int main(void) {
+	/*** Définition de variables. ***/
+	t_socket server_socket;
+	t_socket tmp_socket;
+	t_joueur* joueurs[MAX_PLAYERS];
+	int iplayer = 0;
 	
-	t_joueur* joueurs[4];
-	int i, iturn = 0;
+	/*** Définition de schedulers, threads et events. ***/
 	
-	for(i=0; i<4; i++) {
-		joueurs[i] = create_empty_player();
-	}
+	ft_event_t start_game = ft_event_create();
+	ft_thread_t countdown = ft_thread_create(main_sched, countdown, NULL, NULL);
 	
-	while(true) {
-		if(iturn == 3) iturn = 0;
-		else iturn++;
-		
-		turn(joueurs[iturn], joueurs, 4);
-	}
+	/*** Instructions. ***/
+	server_socket = init_connection();
 	
-	t_commande* com = interpret_string("COMMANDE/ARG1/ARG2");
+	t_sockaddr_in csin = { 0 };
+	size_t sinsize = sizeof csin;
+	tmp_socket = accept(server_socket, (t_sockaddr*)&csin, (socklen_t*)&sinsize);
 	
+	joueurs[iplayer] = create_player(tmp_socket);
+	iplayer++;
 	
-	printf("%s\n", com->fonction);
-	printf("%s\n", com->args->first->contenu);
-	printf("%s\n", com->args->last->contenu);
-	
-	//t_socket sock = init_connection();
-
-	t_joueur* joueur = create_empty_player();
-
-	t_point points[3];
-	points[0].x = 1;
-	points[0].y = 1;
-	points[1].x = 1;
-	points[1].y = 1;
-
-	add_boat(joueur, points, 2);
-
-	move_sonde(joueur, 'U');
-	move_sonde(joueur, 'D');
-	move_sonde(joueur, 'D');
-	move_sonde(joueur, 'R');
-
-	attack(joueur, joueur);
-
-	move_sonde(joueur, 'R');
-
-	attack(joueur, joueur);
-
-	move_sonde(joueur, 'U');
-	move_sonde(joueur, 'U');
-	move_sonde(joueur, 'U');
-	
-	attack(joueur, joueur);
-
-	//afficher_terrain(joueur);
-
 	return 0;
 }
