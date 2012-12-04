@@ -5,6 +5,9 @@
 #include "headers/network.h"
 #include "headers/commande.h"
 
+#define true 1
+#define false 0
+
 void afficher_terrain(t_joueur* joueur) {
 	int i, j;
 	for(i=0; i<TAILLE; i++) {
@@ -17,7 +20,22 @@ void afficher_terrain(t_joueur* joueur) {
 
 int main(void) {
 	
-	t_commande* com = interpret("COMMANDE/ARG1/ARG2");
+	t_joueur* joueurs[4];
+	int i, iturn = 0;
+	
+	for(i=0; i<4; i++) {
+		joueurs[i] = create_empty_player();
+	}
+	
+	while(true) {
+		if(iturn == 3) iturn = 0;
+		else iturn++;
+		
+		turn(joueurs[iturn], joueurs, 4);
+	}
+	
+	t_commande* com = interpret_string("COMMANDE/ARG1/ARG2");
+	
 	
 	printf("%s\n", com->fonction);
 	printf("%s\n", com->args->first->contenu);

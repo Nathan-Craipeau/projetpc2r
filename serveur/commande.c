@@ -68,7 +68,7 @@ t_commande* create_empty_commande() {
 	return com;
 }
 
-t_commande* interpret(char* line) {
+t_commande* interpret_string(char* line) {
 	char* str = strdup(line);
 	t_commande* com = create_empty_commande();
 	

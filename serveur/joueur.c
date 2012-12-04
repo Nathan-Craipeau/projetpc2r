@@ -91,15 +91,16 @@ int valid_move(t_joueur* joueur, char direction) {
 	return false;
 }
 
-void turn(t_joueur* joueur, t_joueur* autres_joueurs, int nb_joueurs) {
+void turn(t_joueur* joueur, t_joueur* joueurs, int nb_joueurs) {
 	start_turn(joueur);
 	char tmp;
 	while(joueur->coups_restants > 0 && joueur->sonde->a_tire == false) {
+		printf("Entrez votre commande : ");
 		scanf("%c\n", &tmp);
 		if(tmp == 'F') {
 			int i;
 			for(i = 0; i < nb_joueurs; i++) {
-				if(attack(joueur, &autres_joueurs[nb_joueurs])) {
+				if(attack(joueur, &joueurs[nb_joueurs])) {
 					printf("attaque non réglementaire");
 				}
 			}
