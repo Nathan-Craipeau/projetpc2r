@@ -90,3 +90,25 @@ int valid_move(t_joueur* joueur, char direction) {
 	if(direction == 'D' && joueur->sonde->y < TAILLE - 1) return true;
 	return false;
 }
+
+void turn(t_joueur* joueur, t_joueur* autres_joueurs, int nb_joueurs) {
+	start_turn(joueur);
+	char tmp;
+	while(joueur->coups_restants > 0 && joueur->sonde->a_tire == false) {
+		scanf("%c\n", &tmp);
+		if(tmp == 'F') {
+			int i;
+			for(i = 0; i < nb_joueurs; i++) {
+				if(attack(joueur, &autres_joueurs[nb_joueurs])) {
+					printf("attaque non réglementaire");
+				}
+			}
+		}
+		else if( tmp == 'U' || tmp == 'D' || tmp == 'L' || tmp == 'R') {
+			if(!move_sonde(joueur, tmp)) {
+				printf("Déplacement non autorisé.");
+			}
+		}
+	}
+	printf("fin du tour");
+}

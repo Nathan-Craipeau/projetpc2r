@@ -3,6 +3,7 @@
 
 #include "headers/joueur.h"
 #include "headers/network.h"
+#include "headers/commande.h"
 
 void afficher_terrain(t_joueur* joueur) {
 	int i, j;
@@ -15,7 +16,14 @@ void afficher_terrain(t_joueur* joueur) {
 }
 
 int main(void) {
-	t_socket sock = init_connection();
+	
+	t_commande* com = interpret("COMMANDE/ARG1/ARG2");
+	
+	printf("%s\n", com->fonction);
+	printf("%s\n", com->args->first->contenu);
+	printf("%s\n", com->args->last->contenu);
+	
+	//t_socket sock = init_connection();
 
 	t_joueur* joueur = create_empty_player();
 
@@ -44,7 +52,7 @@ int main(void) {
 	
 	attack(joueur, joueur);
 
-	afficher_terrain(joueur);
+	//afficher_terrain(joueur);
 
 	return 0;
 }
